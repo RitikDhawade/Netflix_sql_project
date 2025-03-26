@@ -47,7 +47,7 @@ CREATE TABLE netflix
 SELECT 
     type,
     COUNT(*)
-FROM netflix
+FROM Movies
 GROUP BY 1;
 ```
 
@@ -61,7 +61,7 @@ WITH RatingCounts AS (
         type,
         rating,
         COUNT(*) AS rating_count
-    FROM netflix
+    FROM Movies
     GROUP BY type, rating
 ),
 RankedRatings AS (
@@ -85,7 +85,7 @@ WHERE rank = 1;
 
 ```sql
 SELECT * 
-FROM netflix
+FROM Movies
 WHERE release_year = 2020;
 ```
 
@@ -100,7 +100,7 @@ FROM
     SELECT 
         UNNEST(STRING_TO_ARRAY(country, ',')) AS country,
         COUNT(*) AS total_content
-    FROM netflix
+    FROM Movies
     GROUP BY 1
 ) AS t1
 WHERE country IS NOT NULL
@@ -115,7 +115,7 @@ LIMIT 5;
 ```sql
 SELECT 
     *
-FROM netflix
+FROM Movies
 WHERE type = 'Movie'
 ORDER BY SPLIT_PART(duration, ' ', 1)::INT DESC;
 ```
@@ -126,7 +126,7 @@ ORDER BY SPLIT_PART(duration, ' ', 1)::INT DESC;
 
 ```sql
 SELECT *
-FROM netflix
+FROM Movies
 WHERE TO_DATE(date_added, 'Month DD, YYYY') >= CURRENT_DATE - INTERVAL '5 years';
 ```
 
@@ -140,7 +140,7 @@ FROM (
     SELECT 
         *,
         UNNEST(STRING_TO_ARRAY(director, ',')) AS director_name
-    FROM netflix
+    FROM Movies
 ) AS t
 WHERE director_name = 'Rajiv Chilaka';
 ```
@@ -151,7 +151,7 @@ WHERE director_name = 'Rajiv Chilaka';
 
 ```sql
 SELECT *
-FROM netflix
+FROM Movies
 WHERE type = 'TV Show'
   AND SPLIT_PART(duration, ' ', 1)::INT > 5;
 ```
@@ -164,7 +164,7 @@ WHERE type = 'TV Show'
 SELECT 
     UNNEST(STRING_TO_ARRAY(listed_in, ',')) AS genre,
     COUNT(*) AS total_content
-FROM netflix
+FROM Movies
 GROUP BY 1;
 ```
 
@@ -182,7 +182,7 @@ SELECT
         COUNT(show_id)::numeric /
         (SELECT COUNT(show_id) FROM netflix WHERE country = 'India')::numeric * 100, 2
     ) AS avg_release
-FROM netflix
+FROM Movies
 WHERE country = 'India'
 GROUP BY country, release_year
 ORDER BY avg_release DESC
@@ -195,7 +195,7 @@ LIMIT 5;
 
 ```sql
 SELECT * 
-FROM netflix
+FROM Movies
 WHERE listed_in LIKE '%Documentaries';
 ```
 
@@ -205,7 +205,7 @@ WHERE listed_in LIKE '%Documentaries';
 
 ```sql
 SELECT * 
-FROM netflix
+FROM Movies
 WHERE director IS NULL;
 ```
 
@@ -215,7 +215,7 @@ WHERE director IS NULL;
 
 ```sql
 SELECT * 
-FROM netflix
+FROM Movies
 WHERE casts LIKE '%Salman Khan%'
   AND release_year > EXTRACT(YEAR FROM CURRENT_DATE) - 10;
 ```
@@ -228,7 +228,7 @@ WHERE casts LIKE '%Salman Khan%'
 SELECT 
     UNNEST(STRING_TO_ARRAY(casts, ',')) AS actor,
     COUNT(*)
-FROM netflix
+FROM Movies
 WHERE country = 'India'
 GROUP BY actor
 ORDER BY COUNT(*) DESC
@@ -249,7 +249,7 @@ FROM (
             WHEN description ILIKE '%kill%' OR description ILIKE '%violence%' THEN 'Bad'
             ELSE 'Good'
         END AS category
-    FROM netflix
+    FROM Movies
 ) AS categorized_content
 GROUP BY category;
 ```
@@ -264,20 +264,5 @@ GROUP BY category;
 - **Content Categorization:** Categorizing content based on specific keywords helps in understanding the nature of content available on Netflix.
 
 This analysis provides a comprehensive view of Netflix's content and can help inform content strategy and decision-making.
-
-
-
-## Author - Zero Analyst
-
-This project is part of my portfolio, showcasing the SQL skills essential for data analyst roles. If you have any questions, feedback, or would like to collaborate, feel free to get in touch!
-
-### Stay Updated and Join the Community
-
-For more content on SQL, data analysis, and other data-related topics, make sure to follow me on social media and join our community:
-
-- **YouTube**: [Subscribe to my channel for tutorials and insights](https://www.youtube.com/@zero_analyst)
-- **Instagram**: [Follow me for daily tips and updates](https://www.instagram.com/zero_analyst/)
-- **LinkedIn**: [Connect with me professionally](https://www.linkedin.com/in/najirr)
-- **Discord**: [Join our community to learn and grow together](https://discord.gg/36h5f2Z5PK)
 
 Thank you for your support, and I look forward to connecting with you!
