@@ -78,7 +78,15 @@ SELECT
 FROM RankedRatings
 WHERE rank = 1;
 ```
+---- OR
 
+SELECT type,rating , rating_count FROM 
+		(SELECT type,rating,COUNT(rating) AS rating_count,
+				RANK() OVER(PARTITION BY type ORDER BY COUNT(rating) DESC) AS ranking
+		FROM Movies
+		GROUP BY type,rating ) AS common_rating_count
+ WHERE ranking = 1;
+ 
 **Objective:** Identify the most frequently occurring rating for each type of content.
 
 ### 3. List All Movies Released in a Specific Year (e.g., 2020)
@@ -107,6 +115,15 @@ WHERE country IS NOT NULL
 ORDER BY total_content DESC
 LIMIT 5;
 ```
+---- OR -----
+
+SELECT new_country,COUNT(show_id) AS most_content_country FROM 
+	(SELECT show_id,country,
+			UNNEST(STRING_TO_ARRAY(country,',')) AS NEW_country
+	FROM Movies) AS country_count
+GROUP BY new_country 
+ORDER BY most_content_country DESC
+LIMIT 5;
 
 **Objective:** Identify the top 5 countries with the highest number of content items.
 
@@ -119,6 +136,22 @@ FROM Movies
 WHERE type = 'Movie'
 ORDER BY SPLIT_PART(duration, ' ', 1)::INT DESC;
 ```
+---- OR -----
+
+SELECT * FROM Movies
+			WHERE 
+			type = 'Movie'
+			AND 
+			duration = (SELECT MAX(duration) FROM Movies)
+
+-- COUNT OF THE MOVIES WITH MAX DURATION
+SELECT COUNT(show_id) FROM 
+	(SELECT * FROM Movies
+			WHERE 
+			type = 'Movie'
+			AND 
+			duration = (SELECT MAX(duration) FROM Movies)) AS counts;
+
 
 **Objective:** Find the movie with the longest duration.
 
