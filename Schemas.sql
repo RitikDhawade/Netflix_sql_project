@@ -1,6 +1,6 @@
 -- Create schemas
 -- Include Movies and TV on Netflix
-
+-- Create a table with the name of Movies
 DROP TABLE IF EXISTS Movies;
 CREATE TABLE Movies
 (
@@ -18,4 +18,4 @@ CREATE TABLE Movies
 	description VARCHAR(550)
 );
 
-SELECT * FROM netflix;
+SELECT * FROM Movies;
